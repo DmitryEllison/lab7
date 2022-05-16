@@ -36,6 +36,14 @@ public class Coordinates {
         }
     }
 
+    public long getX(){
+        return this.x;
+    }
+
+    public float getY(){
+        return this.y;
+    }
+
     @Override
     public String toString(){
         return String.valueOf(x) + "," + String.valueOf(y);

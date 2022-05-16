@@ -2,28 +2,36 @@ package dimka.blinb.collection.utilities;
 
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ServerSender {
-    private Socket client;
-    private Notification notification;
+    ExecutorService executorService = Executors.newFixedThreadPool(10);
 
-    public ServerSender(Socket socket){
-        this.client = socket;
+    public void send(Socket client, Notification notification) throws Exception  {
+        executorService.execute(new Sender(client, notification));
+        System.out.println("Sending to client:\t" + client.getLocalAddress() + "\t" + client.getPort());
     }
 
-    public ServerSender(Socket client, Notification notification){
-        this.client = client;
-        this.notification = notification;
-    }
-    public void send(Notification notification) throws Exception {
-        System.out.println("ќтправл€ю данные клиенту: " + client.getLocalAddress() + client.getPort());
-        try{
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(client.getOutputStream());
-            objectOutputStream.writeObject(notification);
-            System.out.println(notification.toString());
-            objectOutputStream.flush();
-        }catch(Exception e){
-            System.err.println("Something went wrong with sending notification.");
+    public class Sender implements Runnable{
+        private Socket client;
+        private Notification notification;
+
+        public Sender(Socket client, Notification notification){
+            this.client = client;
+            this.notification = notification;
+        }
+
+        @Override
+        public void run(){
+            try{
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(client.getOutputStream());
+                objectOutputStream.writeObject(notification);
+                System.out.println(notification.toString());
+                objectOutputStream.flush();
+            }catch(Exception e){
+                System.err.println("Something went wrong with sending notification.");
+            }
         }
     }
 }

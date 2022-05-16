@@ -36,7 +36,7 @@ public class Location {
 
     }
 
-    public Location(String name, Float x, Integer y){
+    public Location(String name, Float x, Long y){
         this.x = x;
         this.y = (long) y;
         this.name = name;
@@ -48,5 +48,18 @@ public class Location {
     @Override
     public String toString(){
         return this.name + "," + String.valueOf(x) + "," + String.valueOf(y) + "," + String.valueOf(z);
+    }
+
+    public Float getX(){
+        return this.x;
+    }
+    public long getY(){
+        return this.y;
+    }
+    public int getZ(){
+        return this.z;
+    }
+    public String getName(){
+        return this.name;
     }
 }

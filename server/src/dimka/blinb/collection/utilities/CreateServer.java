@@ -7,8 +7,11 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.BindException;
 import java.net.ServerSocket;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class CreateServer {
     public static ServerSocket server;
@@ -27,7 +30,8 @@ public class CreateServer {
     public static void create() throws Exception{
         CreateServer.checkForExitSaveCommand();
         // Добавляем наши команды
-        commandDispatcher.addCommands(new showHandler());
+        commandDispatcher.addCommands(new showHandler(), new insertHandler(), new historyHandler(),
+                new loginHandler(), new registerHandler());
 
         try {
             server = new ServerSocket(2222);
@@ -63,6 +67,22 @@ public class CreateServer {
         });
         backgroundReaderThread.setDaemon(true);
         backgroundReaderThread.start();
+    }
+
+    public static String PasswordCoder(String input) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] messageDigest = md.digest(input.getBytes());
+            BigInteger no = new BigInteger(1, messageDigest);
+            String hashtext = no.toString(16);
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+            return hashtext;
+        } catch (NoSuchAlgorithmException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 
 }

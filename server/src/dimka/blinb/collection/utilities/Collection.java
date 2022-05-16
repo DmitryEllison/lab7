@@ -18,7 +18,7 @@ public class Collection implements Comparable, CollectionAble, Serializable {
      * Basic collection processing methods.
      **/
     protected static LinkedHashMap<Integer, Route> LHM = new LinkedHashMap<>();
-    protected static String creationTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    protected static String creationTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     protected String collectionName = "MyCollection";
     private String nameOfFile = "";
     public boolean IS_WORKING = true;

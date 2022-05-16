@@ -3,7 +3,9 @@ package dimka.blinb.collection.objects;
 import dimka.blinb.collection.exception.NameIsEmpty;
 import dimka.blinb.collection.exception.OutOfRange;
 
-import java.time.LocalDate;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 /**
@@ -14,11 +16,15 @@ public class Route implements Comparable<Route> {
     private Integer id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; //Поле не может быть null
-    private LocalDate creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
+    private String creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
     private Location from; //Поле может быть null
     private Location to; //Поле не может быть null
     private float distance; //Значение поля должно быть больше 1
+    private String login = "admin";
 
+    public Route(){
+
+    };
     public Route(String[] set) throws NameIsEmpty, OutOfRange, NullPointerException{
         // For example Route r = new Route("Way 90", coordinates, from, to, 10F)
         if (Objects.isNull(set[0]) || Objects.isNull(set[2]) || Objects.isNull(set[5]) || Objects.isNull(set[3])){
@@ -28,7 +34,7 @@ public class Route implements Comparable<Route> {
         this.name = setName(set[0]);
         this.id = Integer.valueOf(set[1]);
         this.coordinates = new Coordinates(Long.parseLong(set[2].split(",")[0]), Float.parseFloat(set[2].split(",")[1]));
-        this.creationDate = LocalDate.parse(set[3]);
+        this.creationDate = set[3];
         this.from = setLocation(set[4].split(","));
         this.to = setLocation(set[5].split(","));
         this.distance = Float.parseFloat(set[6]);
@@ -97,12 +103,16 @@ public class Route implements Comparable<Route> {
         return id;
     }
 
-    private LocalDate setLocalDate(){
+    private String setLocalDate(){
         // Set the current time
-        return LocalDate.now();
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
-    public String getLocalDate(){
+    public void setCreationDate(Timestamp time){
+        this.creationDate = time.toString();
+    }
+
+    public String getCreationDate(){
         return creationDate.toString();
     }
 
@@ -160,6 +170,10 @@ public class Route implements Comparable<Route> {
         else
             this.distance = distance;
     }
+
+    public String getLogin(){ return this.login; }
+
+    public void setLogin(String string){ this.login = login; }
 
     @Override
     public int compareTo(Route o) {
