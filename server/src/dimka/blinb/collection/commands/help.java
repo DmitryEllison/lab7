@@ -4,19 +4,16 @@ import dimka.blinb.collection.interfaces.ICommand;
 
 import java.io.Serializable;
 
-public class show extends ICommand implements Serializable {
-    static final long serialVersionUID = 0L;
-    /**
-     * Showing the collection
-     **/
+public class help extends ICommand implements Serializable {
+    static final long serialVersionUID = 4L;
 
     @Override
     public String getName() {
-        return "show";
+        return "help";
     }
 
     @Override
     public String toString(){
-        return "Showing the collection";
+        return "Return all available commands";
     }
 }

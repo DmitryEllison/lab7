@@ -1,11 +1,5 @@
 package dimka.blinb.collection.interfaces;
 
-import dimka.blinb.collection.exception.NameIsEmpty;
-import dimka.blinb.collection.exception.OutOfRange;
-import dimka.blinb.collection.utilities.CommandDispatcher;
-
-import java.io.IOException;
-
 /**
  * Interface of all commands. Each command should be implements from this Interface.
  */
