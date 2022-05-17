@@ -41,8 +41,9 @@ public class insert extends ICommand implements Serializable {
             from = new Location(element[1]);
         Location to = new Location(element[2]);
         Float distance = Float.valueOf(element[3]);
+        String login = element[4];
 
-        this.r = new Route(name, coordinate, from, to, distance);
+        this.r = new Route(name, coordinate, from, to, distance, login);
     }
 
     @Override

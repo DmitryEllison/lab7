@@ -10,7 +10,6 @@ public class ServerSender {
 
     public void send(Socket client, Notification notification) throws Exception  {
         executorService.execute(new Sender(client, notification));
-        System.out.println("Sending to client:\t" + client.getLocalAddress() + "\t" + client.getPort());
     }
 
     public class Sender implements Runnable{

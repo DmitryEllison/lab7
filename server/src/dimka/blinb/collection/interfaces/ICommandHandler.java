@@ -12,6 +12,6 @@ public interface ICommandHandler{
     /**
      * Execute the command.
      **/
-    public Notification execute(CommandDispatcher commandDispatcher) throws Exception;
+    public Notification execute(CommandDispatcher commandDispatcher, ICommand SUPER_COMMAND) throws Exception;
     public String getName();
 }

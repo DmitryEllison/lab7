@@ -1,11 +1,13 @@
 package dimka.blinb.collection.objects;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Point position class for plane or space
  * */
-public class Location {
+public class Location implements Serializable {
+    static final long serialVersionUID = 4L;
     protected Float x; //Поле не может быть null
     protected long y; //Поле не может быть null
     protected int z = 0;

@@ -1,11 +1,10 @@
 import dimka.blinb.collection.utilities.*;
 import dimka.blinb.collection.commands.*;
 import dimka.blinb.collection.interfaces.*;
+import dimka.blinb.collection.Enums.Color;
 
 
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
@@ -14,9 +13,7 @@ import java.util.Scanner;
  * */
 
 public class client {
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
+
 
     public static void main(String[] args) throws Exception {
         // Создание объекта который будет работать с командами
@@ -30,39 +27,44 @@ public class client {
         // Начало работы с пользователем
         Scanner in = new Scanner(System.in, "windows-1251");
 
-        System.out.println(ANSI_GREEN + "The program is ready to work!" + ANSI_RESET);
-        System.out.println("Choose the command: " +
-                ANSI_GREEN + "login" + ANSI_RESET + " " +
-                ANSI_GREEN + "or register" + ANSI_RESET);
+        Notification.println("The program is ready to work!", Color.PURPLE);
+        //Notification.print("Choose the command: register or login", Color.GREEN);
+
         while (CommandDispatcher.IS_WORKING){
             // Подключение
             ClientSender.reconnect();
-            // Работа с сервером
             while (ClientSender.SERVER_IS_CONNECTED){
+                String s;
                 try {
-                    String s = in.nextLine();
+                    Notification.print(">> ", Color.GREEN);
+                    s = in.nextLine();
                     // Создание объекта комманды с заполненными полями
                     ICommand command  = commands.handle(s.split(" "));
                     if (command != null) {
                         ClientSender.send(command);
                         try {
+
                             // Get data from server
                             Notification notification = ClientReceiver.receive();
-                            // and print it
                             if (notification != null)
                                 System.out.println(notification.toString());
                             else
-                                System.out.println("Message is empty!" + ANSI_YELLOW +
-                                        "\n client.java \n printing notification" + ANSI_RESET);
+                                Notification.println("Message is empty!", Color.YELLOW);
                         } catch (SocketTimeoutException e) {
-                            System.err.println("The Server is not connected or busy right now, try again later.");
+
+                           Notification.println("The Server is not connected or busy right now, trying reconnect...", Color.YELLOW);
+                           ClientSender.SERVER_IS_CONNECTED = false;
+                           ClientSender.reconnect();
+
                         } catch (Exception e) {
+
                             e.printStackTrace();
                             System.out.println(e.getCause());
+
                         }
                     }
-                } catch (NoSuchElementException | ClassNotFoundException | InterruptedException | SocketException e) {
-                    System.err.println(e);
+                } catch (Exception e) {
+                    continue;
                 }
 
             }

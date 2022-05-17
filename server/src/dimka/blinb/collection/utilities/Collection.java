@@ -5,6 +5,7 @@ import dimka.blinb.collection.exception.OutOfRange;
 import dimka.blinb.collection.interfaces.CollectionAble;
 import dimka.blinb.collection.objects.Route;
 
+import javax.xml.bind.SchemaOutputResolver;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -48,25 +49,8 @@ public class Collection implements Comparable, CollectionAble, Serializable {
      * @return
      */
     public boolean add(Route route){
-        assert hasElement(route.getID()) : "The element is in the collection already\nThe element has been updated!";
-        LinkedHashMap<Integer, Route> temp = new LinkedHashMap<Integer, Route>();
-
-        /**
-         * If the same key is already exist then we just change him
-         */
-        if (hasElement(route.getID())) {
-            System.out.println("An element with the same key already being!");
-            changeKey(route);
-            add(route);
-            // System.out.println("The key has been changed because a element with the same key is already exist");
-            // System.out.println("The new key: " + route.getID());
-        } else if (LHM.isEmpty()) {
-            LHM.put(route.getID(), route);
-        } else {
-            LHM.put(route.getID(), route);
-            LHM.keySet().stream().sorted().forEach(k -> temp.put(k, LHM.get(k)));
-            LHM = temp;
-        }
+        assert hasElement(route.getID()) : "The collection has the element already\nThe element has been updated!";
+        this.getLHM().put(route.getID(), route);
         return true;
     }
 
@@ -74,9 +58,16 @@ public class Collection implements Comparable, CollectionAble, Serializable {
         route.setID(route.createID());
     }
 
+    public Boolean update(Route route){
+        if (!hasElement(route.getID()))
+            return false;
+        this.getLHM().remove(route.getID());
+        this.add(route);
+        return true;
+    }
     public boolean hasElement(Integer key){
         for(Map.Entry<Integer, Route> element: LHM.entrySet())
-            if (element.getKey() == key)
+            if (element.getKey().compareTo(key) == 0)
                 return true;
         return false;
     }
@@ -96,7 +87,7 @@ public class Collection implements Comparable, CollectionAble, Serializable {
     public String toString(){
         return "Collection name: " + this.collectionName + "\n" +
                 "Collection type: " + LHM.getClass().getName() + '\n' +
-                "Creation time: " + this.creationTime + '\n' +
+                "Server working time: " + this.creationTime + '\n' +
                 "Amount of collection: " + LHM.size();
     }
 
@@ -141,6 +132,7 @@ public class Collection implements Comparable, CollectionAble, Serializable {
             scanner.close();
             this.nameOfFile = path;
         } catch(Exception e){
+            e.printStackTrace();
             System.out.println("No such file exists, please enter again!");
             this.openFile(askNameOfFile());
         }

@@ -1,5 +1,5 @@
 import dimka.blinb.collection.utilities.*;
-import dimka.blinb.collection.interfaces.*;
+import dimka.blinb.collection.Enums.Color;
 
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -16,17 +16,18 @@ public class server {
      */
     public static void main(String[] args) throws Exception {
         CreateServer.create();
-        CreateServer.commandDispatcher.getCollection().openFile("C:\\Users\\dimka\\IdeaProjects\\lab6_client\\lab_6_client\\src\\File.txt");
+        CreateServer.commandDispatcher.getCollection().openFile("C:/Users/dimka/IdeaProjects/lab7/server/src/BaseCollection.txt");
         try {
             ORM_API orm_API = new ORM_API();
             ORM_API.ConnectionToDB();
+            ORM_API.uploadCollection();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         while (!CreateServer.server.isClosed()) {
             Socket socket = CreateServer.server.accept();
             new Thread(new WorkWithNewUser(socket)).start();
-            System.out.println("Новое подключение: "+socket.getLocalAddress()+socket.getPort());
+            Notification.print("Новое подключение: "+socket.getLocalAddress() + " " + socket.getPort(), Color.PURPLE);
         }
     }
 }

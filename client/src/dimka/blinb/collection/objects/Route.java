@@ -3,6 +3,7 @@ package dimka.blinb.collection.objects;
 import dimka.blinb.collection.exception.NameIsEmpty;
 import dimka.blinb.collection.exception.OutOfRange;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -12,7 +13,8 @@ import java.util.Objects;
  * All information about our object
  * */
 
-public class Route implements Comparable<Route> {
+public class Route implements Comparable<Route>, Serializable {
+    static final long serialVersionUID = 1L;
     private Integer id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; //Поле не может быть null
@@ -20,7 +22,7 @@ public class Route implements Comparable<Route> {
     private Location from; //Поле может быть null
     private Location to; //Поле не может быть null
     private float distance; //Значение поля должно быть больше 1
-    private String login = "admin";
+    private String login = "DEFAULT";
 
     public Route(){
 
@@ -31,7 +33,7 @@ public class Route implements Comparable<Route> {
             throw new NullPointerException("Some variables is null!");
         }
 
-        this.name = setName(set[0]);
+        setName(set[0]);
         this.id = Integer.valueOf(set[1]);
         this.coordinates = new Coordinates(Long.parseLong(set[2].split(",")[0]), Float.parseFloat(set[2].split(",")[1]));
         this.creationDate = set[3];
@@ -40,7 +42,7 @@ public class Route implements Comparable<Route> {
         this.distance = Float.parseFloat(set[6]);
     }
 
-    public Route(String name, Coordinates coordinates, Location from, Location to, Float distance) throws NameIsEmpty, OutOfRange, NullPointerException {
+    public Route(String name, Coordinates coordinates, Location from, Location to, Float distance, String login) throws NameIsEmpty, OutOfRange, NullPointerException {
         if (Objects.isNull(name) || Objects.isNull(coordinates) || Objects.isNull(to)){
             throw new NullPointerException("Some variables is null!");
         }
@@ -59,6 +61,7 @@ public class Route implements Comparable<Route> {
         this.distance = distance;
         // Добавить проверку уникальности и сделать положительным id
         this.id = createID();
+        this.login = login;
     }
 
     @Override
@@ -120,11 +123,11 @@ public class Route implements Comparable<Route> {
         return name;
     }
 
-    public String setName(String name) throws NameIsEmpty{
-        if (name == "")
-            throw new NameIsEmpty("Name is empty!");
+    public void setName(String name) throws NameIsEmpty{
+        if (name == "" || name == null)
+            this.name = "Empty Name!";
         else
-            return name;
+            this.name = name;
     }
 
     public Coordinates getCoordinates() {

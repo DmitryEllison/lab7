@@ -1,12 +1,15 @@
 package dimka.blinb.collection.utilities;
 
+import dimka.blinb.collection.Enums.Color;
 import dimka.blinb.collection.interfaces.ICommand;
 
 import java.net.Socket;
+import java.net.SocketException;
 
 public class WorkWithNewUser implements Runnable{
     private Socket clientSocket;
-    private String newuser = "";
+    private String newUser = "";
+    private Boolean WORKING_WITH_USER = true;
     public WorkWithNewUser(Socket client) {
         this.clientSocket = client;
     }
@@ -18,29 +21,32 @@ public class WorkWithNewUser implements Runnable{
         try {
             ICommand cmd;
             // while we don't know user's name
-            while (newuser.equals("")) {
-                cmd = (ICommand) serverReceiver.receive(clientSocket);
-                Notification notification = CreateServer.commandDispatcher.handle(cmd);
-                if(notification.message == "success")
-                    this.newuser = notification.getLogin();
-            }
 
-            while (true) {
-                try{
-                    cmd = serverReceiver.receive(clientSocket);
-                    // The command has delivered
-                    System.out.println(cmd.toString());
+            while (WORKING_WITH_USER) {
+                try {
+                    cmd = (ICommand) serverReceiver.receive(clientSocket);
+                    // The command has been delivered
+                    Notification.print(">> " + cmd.toString(), Color.BLUE);
                     Notification notification = CreateServer.commandDispatcher.handle(cmd);
-                    serverSender.send(clientSocket, notification);
-                } catch (Exception e) {
+                    if (notification != null)
+                        serverSender.send(clientSocket, notification);
+                    else {
+                        Notification.print("Client is disconnected!", Color.YELLOW);
+                        WORKING_WITH_USER = false;
+                    }
+
+                }catch (SocketException e){
+                    clientSocket.close();
+                    Notification.print("Client is disconnected!", Color.BLUE);
+                    WORKING_WITH_USER = false;
+                }catch (Exception e) {
                     e.printStackTrace();
                 }
             }
 
-        } catch (NullPointerException e) {
-            System.out.println("Client:\t" + clientSocket.getLocalAddress()+ "\t" + clientSocket.getPort() + " disconnected.");
         } catch (Exception e) {
-            e.printStackTrace();
+            Notification.print("Caught exception in working with User: " + clientSocket.getLocalAddress() + " "
+                    + clientSocket.getPort(),Color.RED);
         }
     }
 }

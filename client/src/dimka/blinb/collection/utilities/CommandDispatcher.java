@@ -1,5 +1,6 @@
 package dimka.blinb.collection.utilities;
 
+import dimka.blinb.collection.Enums.Color;
 import dimka.blinb.collection.exception.*;
 import dimka.blinb.collection.interfaces.*;
 
@@ -9,8 +10,6 @@ import java.util.TreeMap;
 
 
 public class CommandDispatcher {
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
 
     private static Map <String, ICommand> mapOfCommands = new TreeMap<>();
     private static LinkedList<String> history = new LinkedList<String>();
@@ -54,10 +53,10 @@ public class CommandDispatcher {
             // Добавляем имя команды в историю
             this.addToHistory(nameOfCommand);
             return command;
-        } catch ( IncorrectCommand e){
-            System.err.println(ANSI_YELLOW + "The arguments of command are wrong!"+ ANSI_RESET);
+        } catch (IncorrectCommand e){
+            Notification.println("The arguments of command are wrong!", Color.YELLOW);
         } catch (NullPointerException e){
-            System.err.println( ANSI_YELLOW + "The command is not recognized!" + ANSI_RESET);
+            Notification.println("The command is not recognized!", Color.YELLOW);
         }
         return null;
     }

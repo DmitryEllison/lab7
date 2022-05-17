@@ -2,12 +2,14 @@ package dimka.blinb.collection.objects;
 
 import dimka.blinb.collection.exception.OutOfRange;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Current point coordinates
  * */
-public class Coordinates {
+public class Coordinates implements Serializable {
+    static final long serialVersionUID = 5L;
     private long x; //Значение поля должно быть больше -888
     private Float y; //Поле не может быть null
 

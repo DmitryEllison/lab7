@@ -1,5 +1,6 @@
 package dimka.blinb.collection.utilities;
 
+import dimka.blinb.collection.Enums.Color;
 import dimka.blinb.collection.commandsHadler.*;
 import dimka.blinb.collection.exception.*;
 
@@ -31,13 +32,13 @@ public class CreateServer {
         CreateServer.checkForExitSaveCommand();
         // Добавляем наши команды
         commandDispatcher.addCommands(new showHandler(), new insertHandler(), new historyHandler(),
-                new loginHandler(), new registerHandler());
+                new loginHandler(), new registerHandler(), new infoHandler(), new update_idHandler());
 
         try {
-            server = new ServerSocket(2222);
-            System.out.println("Сервер запущен");
+            server = new ServerSocket(2228);
+            Notification.print("Сервер запущен", Color.PURPLE);
         } catch (BindException e) {
-            System.out.println("Данный порт уже занят,возможно сервер уже запущен!\n Принудительно завершаю работу.");
+            Notification.print("Данный порт уже занят\nЗавершаю работу.", Color.PURPLE);
             System.exit(0);
         } catch (Exception e) {
             System.out.println(e.getMessage());

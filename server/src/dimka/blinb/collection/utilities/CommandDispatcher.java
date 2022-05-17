@@ -11,10 +11,9 @@ import java.util.*;
 
 public class CommandDispatcher implements ICommandDispatcher {
     public static Boolean IS_LOGGED = false;
-    public static Boolean IS_WORKING = true;
     private static Map <String, ICommandHandler> mapOfCommandHandler = new TreeMap<>();
     private static LinkedList<String> history = new LinkedList<String>();
-    private static Collection collection;
+    public static Collection collection;
 
     public CommandDispatcher(Collection collection) throws FileNotFoundException {
         this.collection = collection;
@@ -29,9 +28,11 @@ public class CommandDispatcher implements ICommandDispatcher {
         }
     }
     public Collection getCollection() { return this.collection; }
+
     public Map getmapOfCommandHandler(){
         return mapOfCommandHandler;
     }
+
     public LinkedList<String> getHistory(){
         return history;
     }
@@ -45,12 +46,15 @@ public class CommandDispatcher implements ICommandDispatcher {
      * Handle the current command out
      * @return
      */
-    public Notification handle(ICommand cmd) throws IOException, NameIsEmpty, OutOfRange { //save path
+    public Notification handle(ICommand cmd){
         try {
-            return mapOfCommandHandler.get(cmd.getName()).execute(this);
+            Notification notification = mapOfCommandHandler.get(cmd.getName()).execute(this, cmd);
+            ORM_API.loadCollection();
+            this.addToHistory(cmd.getName());
+            return notification;
         }catch (Exception e){
             e.printStackTrace();
-            return new Notification(e.toString());
+            return null;
         }
     }
 }

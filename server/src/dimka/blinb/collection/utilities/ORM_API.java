@@ -2,9 +2,7 @@ package dimka.blinb.collection.utilities;
 
 import dimka.blinb.collection.exception.NameIsEmpty;
 import dimka.blinb.collection.exception.OutOfRange;
-import dimka.blinb.collection.objects.Coordinates;
-import dimka.blinb.collection.objects.Location;
-import dimka.blinb.collection.objects.Route;
+import dimka.blinb.collection.objects.*;
 
 import java.sql.*;
 
@@ -21,12 +19,12 @@ public class ORM_API {
         try {
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(url, user, password);
-            /**
-            // Initialize Table
+
+            //Initialize Table
             stmt = connection.createStatement();
             stmt.execute("CREATE TABLE routes(" +
                     "NAME   TEXT        NOT NULL," +
-                    "ID     INT         NOT NULL," +
+                    "ID INT PRIMARY KEY NOT NULL," +
                     "X1     INT         NOT NULL,       Y1 FLOAT NOT NULL," +
                     "CREATION_DATE DATE NOT NULL," +
                     "NAME_FROM  TEXT,   X2 FLOAT,       Y2 INT," +
@@ -36,7 +34,7 @@ public class ORM_API {
             stmt.execute("CREATE TABLE users(" +
                     "LOGIN      TEXT    NOT NULL ," +
                     "PASSWORD   TEXT    NOT NULL)");
-             **/
+
             uploadCollection();
             return true;
         } catch (SQLException | ClassNotFoundException e) {
@@ -77,13 +75,13 @@ public class ORM_API {
         // загрузить в БД коллекцию
         try {
             preparedStatement = connection.prepareStatement("INSERT into routes values(?,?,?,?,?,?,?,?,?,?,?,?,?)");
-            Collection.LHM.entrySet().stream().filter(x -> {
+            CommandDispatcher.collection.getLHM().entrySet().stream().filter(x -> {
                 try {
                     return !isContain(x.getKey());
                 } catch (SQLException e) {
                     e.printStackTrace();
+                    return false;
                 }
-                return false;
             }).forEach(x -> {
                 try {
                     preparedStatement.setString(1, x.getValue().getName());
@@ -117,7 +115,7 @@ public class ORM_API {
         // загрузить из БД коллекцию
         try {
             try {
-                Collection.LHM.clear();
+                CommandDispatcher.collection.getLHM().clear();
             } catch (NullPointerException e) {
                 System.out.println(e.getMessage());
             }
@@ -141,6 +139,7 @@ public class ORM_API {
                         rs.getLong(11)));
                 r.setDistance(rs.getFloat(12));
                 r.setLogin(rs.getString(13));
+                CommandDispatcher.collection.add(r);
             }
 
         } catch (SQLException | NameIsEmpty | OutOfRange e) {
@@ -150,23 +149,15 @@ public class ORM_API {
     }
 
     public static Boolean isContain(Integer element_id) throws SQLException {
-        stmt = connection.createStatement();
-        rs = stmt.executeQuery("select id from routes where id=" + String.valueOf(element_id));
-        if(rs.next())
-            return true;
-        return false;
-    }
-
-    public static Integer getNewId() {
-        try {
+        try{
             stmt = connection.createStatement();
-            rs = stmt.executeQuery("SELECT nextval('ID')");
-            if (rs.next()) {
-                return rs.getInt(1);
-            } else return null;
-        } catch (SQLException e) {
+            rs = stmt.executeQuery("select id from routes where id=" + String.valueOf(element_id));
+            if(rs.next())
+                return true;
+            return false;
+        }catch (SQLException e) {
             e.printStackTrace();
-            return null;
+            return false;
         }
     }
 }

@@ -1,6 +1,9 @@
 package dimka.blinb.collection.objects;
 
-public class Location3D extends Location {
+import java.io.Serializable;
+
+public class Location3D extends Location implements Serializable {
+    static final long serialVersionUID = 3L;
     Location3D(String name, Float x, long y, Integer z){
         super(name, x, y, z);
     }
