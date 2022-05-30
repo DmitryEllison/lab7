@@ -6,6 +6,7 @@ import dimka.blinb.collection.interfaces.ICommand;
 import dimka.blinb.collection.objects.Coordinates;
 import dimka.blinb.collection.objects.Location;
 import dimka.blinb.collection.objects.Route;
+import dimka.blinb.collection.utilities.CommandDispatcher;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -41,7 +42,7 @@ public class insert extends ICommand implements Serializable {
             from = new Location(element[1]);
         Location to = new Location(element[2]);
         Float distance = Float.valueOf(element[3]);
-        String login = element[4];
+        String login = "EMPTY_LOGIN";
 
         this.r = new Route(name, coordinate, from, to, distance, login);
     }

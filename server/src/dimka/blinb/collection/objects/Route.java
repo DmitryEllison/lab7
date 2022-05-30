@@ -23,7 +23,7 @@ public class Route implements Comparable<Route>, Serializable {
     private Location from; //Поле может быть null
     private Location to; //Поле не может быть null
     private float distance; //Значение поля должно быть больше 1
-    private String login = "DEFAULT";
+    private String login = "";
 
     public Route(){
 
@@ -177,7 +177,7 @@ public class Route implements Comparable<Route>, Serializable {
 
     public String getLogin(){ return this.login; }
 
-    public void setLogin(String string){ this.login = login; }
+    public void setLogin(String login){ this.login = login; }
 
     @Override
     public int compareTo(Route o) {

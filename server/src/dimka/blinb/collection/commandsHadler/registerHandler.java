@@ -8,9 +8,11 @@ import dimka.blinb.collection.utilities.*;
 public class registerHandler extends register implements ICommandHandler {
     @Override
     public Notification execute(CommandDispatcher cmd, ICommand SUPER_COMMAND) throws Exception{
-        String password = CreateServer.PasswordCoder((String) (super.password));
-        if (ORM_API.addNewUser(super.login, super.password))
-            return new Notification("success", super.login);
-        return new Notification("Something went wrong in\n\tregisterHandler.java");
+        register super_command = (register) SUPER_COMMAND;
+        if (ORM_API.addNewUser(super_command.login, super_command.password)) {
+            WorkWithNewUser.USER_LOGIN = super_command.login;
+            return new Notification("success", super_command.login);
+        }
+        return new Notification("Something went wrong, please try again...");
     }
 }

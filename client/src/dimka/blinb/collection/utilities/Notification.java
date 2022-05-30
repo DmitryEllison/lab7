@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 public class Notification implements Serializable {
     static final long serialVersionUID = 123L;
-    public String login = "";
+    private String login = "";
     public String message = "EMPTY_STRING_MESSAGE";
 
     public Notification(String message){
@@ -29,6 +29,10 @@ public class Notification implements Serializable {
 
     public String getLogin(){
         return this.login;
+    }
+
+    public Boolean loginIsEmpty(){
+        return (this.getLogin() == "") ? true : false;
     }
 
     public static void println(String message, Color color){

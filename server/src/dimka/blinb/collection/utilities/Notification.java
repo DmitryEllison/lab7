@@ -31,8 +31,14 @@ public class Notification implements Serializable {
         return this.login;
     }
 
-    public static void print(String message, Color color){
+    public static void println(String message, Color color){
         System.out.println(color + message + Color.STOP);
+    }
+    public static void println(String message){
+        System.out.println( message );
+    }
+    public static void print(String message, Color color){
+        System.out.print(color + message + Color.STOP);
     }
 
     @Override

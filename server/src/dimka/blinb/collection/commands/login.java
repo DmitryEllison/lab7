@@ -6,8 +6,8 @@ import java.io.Serializable;
 
 public class login extends ICommand implements Serializable {
     static final long serialVersionUID = 0L;
-    protected String login = "";
-    protected String password = "";
+    public String login = "";
+    public String password = "";
 
     @Override
     public String getName() {

@@ -20,31 +20,9 @@ public class insert extends ICommand implements Serializable {
      * Insert new element by key [insert KEY {~element~}]
      * // insert NAME {Coordinates(Int,Float);from;to(Name,Float,Long);Float} : добавить новый элемент с заданным ключом
      * insert 3131 {1,1;;Чебоксары,1,1;200.5}
-     * @param args
      * @return
      * @throws IOException
      **/
-
-    public void initialize(String[] args) throws IOException, OutOfRange, NameIsEmpty {
-        // Parsing the command line
-        String newElement = args[2].replace("{", "").replace("}", "") ;
-        String[] element = newElement.split(";");
-
-        // Create arguments for Route class
-        String name = "";
-        for (int i =1; i < args.length-1; i++)
-            name += args[i] + " ";
-        // Create route object
-        Coordinates coordinate = new Coordinates(element[0]);
-        Location from = null;
-        if (!element[1].equals(""))
-            from = new Location(element[1]);
-        Location to = new Location(element[2]);
-        Float distance = Float.valueOf(element[3]);
-        String login = element[4];
-
-        this.r = new Route(name, coordinate, from, to, distance, login);
-    }
 
     @Override
     public String getName() {

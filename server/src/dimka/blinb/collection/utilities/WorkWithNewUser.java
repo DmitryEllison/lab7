@@ -8,8 +8,8 @@ import java.net.SocketException;
 
 public class WorkWithNewUser implements Runnable{
     private Socket clientSocket;
-    private String newUser = "";
     private Boolean WORKING_WITH_USER = true;
+    public static String USER_LOGIN = "";
     public WorkWithNewUser(Socket client) {
         this.clientSocket = client;
     }
@@ -25,19 +25,22 @@ public class WorkWithNewUser implements Runnable{
             while (WORKING_WITH_USER) {
                 try {
                     cmd = (ICommand) serverReceiver.receive(clientSocket);
+                    ORM_API.loadCollection();
+
                     // The command has been delivered
-                    Notification.print(">> " + cmd.toString(), Color.BLUE);
+                    Notification.println(">> " + cmd.toString(), Color.BLUE);
                     Notification notification = CreateServer.commandDispatcher.handle(cmd);
+
                     if (notification != null)
                         serverSender.send(clientSocket, notification);
                     else {
-                        Notification.print("Client is disconnected!", Color.YELLOW);
+                        Notification.println("Client is disconnected!", Color.YELLOW);
                         WORKING_WITH_USER = false;
                     }
 
                 }catch (SocketException e){
                     clientSocket.close();
-                    Notification.print("Client is disconnected!", Color.BLUE);
+                    Notification.println("Client is disconnected!", Color.BLUE);
                     WORKING_WITH_USER = false;
                 }catch (Exception e) {
                     e.printStackTrace();
@@ -45,7 +48,7 @@ public class WorkWithNewUser implements Runnable{
             }
 
         } catch (Exception e) {
-            Notification.print("Caught exception in working with User: " + clientSocket.getLocalAddress() + " "
+            Notification.println("Caught exception in working with User: " + clientSocket.getLocalAddress() + " "
                     + clientSocket.getPort(),Color.RED);
         }
     }

@@ -46,10 +46,16 @@ public class client {
 
                             // Get data from server
                             Notification notification = ClientReceiver.receive();
-                            if (notification != null)
+                            if (notification != null){
                                 System.out.println(notification.toString());
+                                if (!notification.loginIsEmpty()) {
+                                    CommandDispatcher.IS_LOGGED = true;
+                                    commands.setLogin(notification.getLogin());
+                                }
+                            }
                             else
                                 Notification.println("Message is empty!", Color.YELLOW);
+
                         } catch (SocketTimeoutException e) {
 
                            Notification.println("The Server is not connected or busy right now, trying reconnect...", Color.YELLOW);

@@ -1,11 +1,11 @@
 package dimka.blinb.collection.utilities;
 
+import dimka.blinb.collection.exception.AccessDenied;
 import dimka.blinb.collection.exception.NameIsEmpty;
 import dimka.blinb.collection.exception.OutOfRange;
 import dimka.blinb.collection.interfaces.CollectionAble;
 import dimka.blinb.collection.objects.Route;
 
-import javax.xml.bind.SchemaOutputResolver;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -18,7 +18,7 @@ public class Collection implements Comparable, CollectionAble, Serializable {
     /**
      * Basic collection processing methods.
      **/
-    protected static LinkedHashMap<Integer, Route> LHM = new LinkedHashMap<>();
+    protected LinkedHashMap<Integer, Route> LHM = new LinkedHashMap<>();
     protected static String creationTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     protected String collectionName = "MyCollection";
     private String nameOfFile = "";
@@ -58,13 +58,17 @@ public class Collection implements Comparable, CollectionAble, Serializable {
         route.setID(route.createID());
     }
 
-    public Boolean update(Route route){
+    public Boolean update(Route route) throws AccessDenied {
         if (!hasElement(route.getID()))
             return false;
-        this.getLHM().remove(route.getID());
-        this.add(route);
-        return true;
+        if (this.getLHM().get(route.getID()).getLogin().compareTo(route.getLogin())==0){
+            this.getLHM().remove(route.getID());
+            this.add(route);
+            return true;
+        }
+        throw new AccessDenied();
     }
+
     public boolean hasElement(Integer key){
         for(Map.Entry<Integer, Route> element: LHM.entrySet())
             if (element.getKey().compareTo(key) == 0)

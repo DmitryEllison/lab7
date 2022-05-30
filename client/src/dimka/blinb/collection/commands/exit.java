@@ -11,6 +11,11 @@ public class exit extends ICommand implements Serializable {
      */
 
     @Override
+    public void initialize(String[] args) throws Exception{
+        System.exit(0);
+    }
+
+    @Override
     public String toString(){
         return "Closing the program without saving";
     }

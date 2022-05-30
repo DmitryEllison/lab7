@@ -5,6 +5,7 @@ import dimka.blinb.collection.interfaces.ICommand;
 import dimka.blinb.collection.objects.Coordinates;
 import dimka.blinb.collection.objects.Location;
 import dimka.blinb.collection.objects.Route;
+import dimka.blinb.collection.utilities.CommandDispatcher;
 import dimka.blinb.collection.utilities.Notification;
 
 import java.io.IOException;
@@ -39,7 +40,7 @@ public class update_id extends ICommand implements Serializable {
                 from = new Location(element[2]);
             Location to = new Location(element[3]);
             Float distance = Float.valueOf(element[4]);
-            String login = "DEFAULT";
+            String login = "UNCHANGED_LOGIN";
 
             // Create instance of Route and hand to collection method on
             Route route = new Route(element[0], coordinate, from, to, distance, login);

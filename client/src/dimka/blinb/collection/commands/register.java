@@ -1,25 +1,26 @@
 package dimka.blinb.collection.commands;
 
+import dimka.blinb.collection.Enums.Color;
 import dimka.blinb.collection.interfaces.ICommand;
+import dimka.blinb.collection.utilities.CommandDispatcher;
+import dimka.blinb.collection.utilities.Notification;
 
 import java.io.Console;
 import java.io.Serializable;
 import java.util.Scanner;
 
 public class register extends ICommand implements Serializable {
-    static final long serialVersionUID = 0L;
-    protected String login = "";
-    protected String password = "";
+    static final long serialVersionUID = 567L;
+    public String login = "";
+    public String password = "";
 
     @Override
     public void initialize(String[] args) throws Exception{
-        System.out.print("Enter login: ");
+        Notification.print("Enter login: ", Color.PURPLE);
         Scanner in = new Scanner(System.in);
         this.login = in.nextLine();
-        System.out.print("Enter password: ");
-        this.password = in.nextLine();
-        // Console cnsl = System.console();
-        // this.password = String.valueOf(cnsl.readPassword("Enter password: "));
+        Notification.print("Enter password: ", Color.PURPLE);
+        this.password = CommandDispatcher.PasswordCoder(in.nextLine());
     }
 
     @Override

@@ -1,7 +1,6 @@
 package dimka.blinb.collection.utilities;
 
 import dimka.blinb.collection.Enums.Color;
-import dimka.blinb.collection.commands.help;
 import dimka.blinb.collection.interfaces.ICommand;
 
 import java.io.IOException;
@@ -25,7 +24,7 @@ public class ServerReceiver {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        Notification.print("IN SERVER_RECEIVER RETURNED NULL", Color.RED);
+        Notification.println("IN SERVER_RECEIVER RETURNED NULL", Color.RED);
         return null;
     }
 
@@ -44,7 +43,7 @@ public class ServerReceiver {
                 ICommand cmd = (ICommand) objectInputStream.readObject();
                 return cmd;
             } catch (Exception e) {
-                Notification.print("Something went wrong with receiving data from client."
+                Notification.println("Something went wrong with receiving data from client."
                         + client.getLocalAddress() + " " + client.getPort(), Color.RED);
                 return null;
             }

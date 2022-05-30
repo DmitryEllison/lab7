@@ -21,6 +21,7 @@ public class ORM_API {
             connection = DriverManager.getConnection(url, user, password);
 
             //Initialize Table
+            /**
             stmt = connection.createStatement();
             stmt.execute("CREATE TABLE routes(" +
                     "NAME   TEXT        NOT NULL," +
@@ -35,7 +36,7 @@ public class ORM_API {
                     "LOGIN      TEXT    NOT NULL ," +
                     "PASSWORD   TEXT    NOT NULL)");
 
-            uploadCollection();
+            **/
             return true;
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
@@ -74,15 +75,11 @@ public class ORM_API {
     public static void uploadCollection() {
         // загрузить в БД коллекцию
         try {
+            preparedStatement = connection.prepareStatement("TRUNCATE routes");
+            preparedStatement.execute();
+
             preparedStatement = connection.prepareStatement("INSERT into routes values(?,?,?,?,?,?,?,?,?,?,?,?,?)");
-            CommandDispatcher.collection.getLHM().entrySet().stream().filter(x -> {
-                try {
-                    return !isContain(x.getKey());
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    return false;
-                }
-            }).forEach(x -> {
+            CommandDispatcher.collection.getLHM().entrySet().stream().forEach(x -> {
                 try {
                     preparedStatement.setString(1, x.getValue().getName());
                     preparedStatement.setInt(2, x.getValue().getID());
